@@ -184,5 +184,5 @@ title Arch Linux
 linux /vmlinuz-linux  
 initrd /intel-ucode.img  
 initrd /initramfs-linux.img  
-options root=$ROOTPARTITION rootfstype=btrfs rootflags=subvol=${rootsubvol} elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles vga=current rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915.fastboot=1 i915.invert_brightness=1
+options root=$partition3 rootfstype=btrfs rootflags=subvol=${rootsubvol} elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles vga=current rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915.fastboot=1 i915.invert_brightness=1
 EOF
