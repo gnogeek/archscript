@@ -156,14 +156,33 @@ echo -ne "
 -------------------------------------------------------------------------
 "
 
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch-Btrfs --modules="normal test efi_gop efi_uga search echo linux all_video gfxmenu gfxterm_background gfxterm_menu gfxterm loadenv configfile gzio part_gpt btrfs"
+#grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch-Btrfs --modules="normal test efi_gop efi_uga search echo linux all_video gfxmenu gfxterm_background gfxterm_menu gfxterm loadenv configfile gzio part_gpt btrfs"
 
-sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
-
-
-sed -i 's/rootflags=subvol=${rootsubvol}//' /etc/grub.d/10_linux
-sed -i 's/rootflags=subvol=${rootsubvol}//' /etc/grub.d/20_linux_xen
-sed -i 's|,subvolid=258,subvol=/@/.snapshots/1/snapshot| |' /etc/fstab
+#sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 
 
-grub-mkconfig -o /boot/grub/grub.cfg
+#sed -i 's/rootflags=subvol=${rootsubvol}//' /etc/grub.d/10_linux
+#sed -i 's/rootflags=subvol=${rootsubvol}//' /etc/grub.d/20_linux_xen
+#sed -i 's|,subvolid=258,subvol=/@/.snapshots/1/snapshot| |' /etc/fstab
+
+
+#grub-mkconfig -o /boot/grub/grub.cfg
+ bootctl install
+  tee -a /boot/loader/loader.conf <<EOF
+default      arch.conf
+timeout      0
+editor       no
+console-mode auto
+EOF
+
+##
+  sed -i 's,#COMPRESSION="zstd",COMPRESSION="zstd",g' /etc/mkinitcpio.conf
+  sed -i 's,MODULES=(),MODULES=(btrfs),g' /etc/mkinitcpio.conf
+##
+  tee -a /boot/loader/entries/arch.conf <<EOF
+title Arch Linux  
+linux /vmlinuz-linux  
+initrd /intel-ucode.img  
+initrd /initramfs-linux.img  
+options root=$ROOTPARTITION rootfstype=btrfs rootflags=subvol=${rootsubvol} elevator=deadline add_efi_memmap rw quiet splash loglevel=3 vt.global_cursor_default=0 plymouth.ignore_serial_consoles vga=current rd.systemd.show_status=auto r.udev.log_priority=3 nowatchdog fbcon=nodefer i915.fastboot=1 i915.invert_brightness=1
+EOF
