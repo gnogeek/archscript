@@ -168,7 +168,7 @@ echo -ne "
 
 #grub-mkconfig -o /boot/grub/grub.cfg
  bootctl install
-  tee -a /boot/loader/loader.conf <<EOF
+  tee -a /boot/efi/loader/loader.conf <<EOF
 default      arch.conf
 timeout      0
 editor       no
@@ -179,7 +179,7 @@ EOF
   sed -i 's,#COMPRESSION="zstd",COMPRESSION="zstd",g' /etc/mkinitcpio.conf
   sed -i 's,MODULES=(),MODULES=(btrfs),g' /etc/mkinitcpio.conf
 ##
-  tee -a /boot/loader/entries/arch.conf <<EOF
+  tee -a /boot/efi/loader/entries/arch.conf <<EOF
 title Arch Linux  
 linux /vmlinuz-linux  
 initrd /intel-ucode.img  
